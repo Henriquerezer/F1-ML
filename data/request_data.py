@@ -283,6 +283,8 @@ import requests
 import xml.etree.ElementTree as ET
 import pandas as pd
 from tqdm import tqdm
+from sqlalchemy import create_engine
+import sqlalchemy
 
 def extract_race_data(year, round_number):
     url = f"http://ergast.com/api/f1/{year}/{round_number}/results"
@@ -368,7 +370,7 @@ def get_total_rounds(year):
     total_rounds = len(root.findall('.//ns:Race', namespace))
     return total_rounds
 
-years = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]
+years = [2010,2011,2012,2013]
 all_race_data = []
 
 # Usar tqdm para exibir uma barra de progresso
@@ -386,5 +388,7 @@ df
 
 engine = create_engine('sqlite:///../data/F1_DATA.db')
 # Salva o DataFrame em uma tabela chamada "drivers" no banco de dados SQLite
-df.to_sql('circuits', con=engine, if_exists='replace', index=False)
+df.to_sql('results', con=engine, if_exists='append', index=False)
 print("Dados salvos no banco de dados com sucesso.")
+
+# %%
