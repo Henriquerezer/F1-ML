@@ -1,9 +1,4 @@
-SELECT  DISTINCT(Round) as Round, max(Season) as Season
-
-FROM results
-
-WHERE Season = 2024
-
-GROUP BY Round
-
-ORDER BY Round desc, Season ASC;
+  SELECT DISTINCT Season, Round
+    FROM qualifying_results
+    ORDER BY Season DESC, Round DESC
+    LIMIT 1
