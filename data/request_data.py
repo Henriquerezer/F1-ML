@@ -383,7 +383,7 @@ def get_total_rounds(year):
     total_rounds = len(root.findall('.//ns:Race', namespace))
     return total_rounds
 
-years = list(range(2000, 2025))
+years = list(range(2000, 2010))
 all_qualifying_data = []
 
 # Usar tqdm para exibir uma barra de progresso
@@ -403,4 +403,164 @@ engine = create_engine('sqlite:///../data/F1_DATA.db')
 # Salva o DataFrame em uma tabela chamada "qualifying_results" no banco de dados SQLite
 df.to_sql('qualifying_results', con=engine, if_exists='replace', index=False)
 print("Dados salvos no banco de dados com sucesso.")
+
+# %%
+
+# DRIVERS STANDINGS
+import requests
+import pandas as pd
+from tqdm import tqdm
+
+# Função para extrair informações de uma corrida específica
+def extract_driver_standings(season, round_num):
+    url = f"http://ergast.com/api/f1/{season}/{round_num}/driverStandings"
+    response = requests.get(url)
+    
+    if response.status_code != 200:
+        return None
+
+    # Parse do XML
+    data = response.text
+    if "<StandingsTable" not in data:
+        return None
+    
+    root = ET.fromstring(data)
+    namespace = {'ns': 'http://ergast.com/mrd/1.5'}
+    
+    standings_table = root.find('ns:StandingsTable', namespace)
+    if standings_table is None:
+        return None
+    
+    standings_list = standings_table.find('ns:StandingsList', namespace)
+    if standings_list is None:
+        return None
+
+    season = standings_table.get('season')
+    round_num = standings_list.get('round')
+    
+    standings = []
+    
+    for driver_standing in standings_list.findall('ns:DriverStanding', namespace):
+        position = driver_standing.get('position')
+        points = driver_standing.get('points')
+        wins = driver_standing.get('wins')
+        driver = driver_standing.find('ns:Driver', namespace)
+        driver_id = driver.get('driverId')
+        
+        standings.append({
+            'season': season,
+            'round': round_num,
+            'position': position,
+            'points': points,
+            'wins': wins,
+            'driverId': driver_id
+        })
+    
+    return standings
+
+# Dataframe para armazenar os dados
+all_standings = pd.DataFrame(columns=['season', 'round', 'position', 'points', 'wins', 'driverId'])
+
+# Loop pelos anos e rodadas
+for year in tqdm(range(2000, 2025)):
+    round_num = 1
+    while True:
+        standings = extract_driver_standings(year, round_num)
+        if standings is None:
+            break
+        all_standings = pd.concat([all_standings, pd.DataFrame(standings)], ignore_index=True)
+        round_num += 1
+
+# Salvar os dados em um arquivo CSV
+#all_standings.to_csv('driver_standings.csv', index=False)
+
+# Exibir os primeiros registros
+print(all_standings.head())
+
+engine = create_engine('sqlite:///../data/F1_DATA.db')
+# Salva o DataFrame em uma tabela chamada "qualifying_results" no banco de dados SQLite
+all_standings.to_sql('driver_standings', con=engine, if_exists='replace', index=False)
+print("Dados salvos no banco de dados com sucesso.")
+
+
+
+# %%
+# PITSTOPS 
+
+import requests
+import xml.etree.ElementTree as ET
+import pandas as pd
+from tqdm import tqdm
+from sqlalchemy import create_engine
+
+def extract_pitstop_data(xml_data):
+    root = ET.fromstring(xml_data)
+
+    namespace = {'ns': 'http://ergast.com/mrd/1.4'}
+    data = []
+
+    for race_table in root.findall('.//ns:RaceTable', namespace):
+        year = race_table.attrib.get('season')
+        for race in race_table.findall('ns:Race', namespace):
+            round_number = race.attrib.get('round')
+            circuit = race.find('ns:Circuit', namespace)
+            circuit_id = circuit.attrib.get('circuitId')
+
+            pitstops_list = race.find('ns:PitStopsList', namespace)
+            if pitstops_list is None:
+                continue  # Se não houver PitStopsList, passar para a próxima corrida
+
+            for pitstop in pitstops_list.findall('ns:PitStop', namespace):
+                driver_id = pitstop.attrib.get('driverId')
+                stop = pitstop.attrib.get('stop')
+                lap = pitstop.attrib.get('lap')
+                time = pitstop.attrib.get('time')
+                duration = pitstop.attrib.get('duration')
+
+                data.append({
+                    'Season': year,
+                    'Round': round_number,
+                    'CircuitID': circuit_id,
+                    'DriverID': driver_id,
+                    'Stop': stop,
+                    'Lap': lap,
+                    'Time': time,
+                    'Duration': duration
+                })
+
+    return data
+
+def get_total_rounds(year):
+    url = f"http://ergast.com/api/f1/{year}.xml"
+    response = requests.get(url)
+    response_text = response.text
+    root = ET.fromstring(response_text)
+
+    namespace = {'ns': 'http://ergast.com/mrd/1.4'}
+    total_rounds = len(root.findall('.//ns:Race', namespace))
+    return total_rounds
+
+all_pitstop_data = []
+
+# Usar tqdm para exibir uma barra de progresso
+for year in tqdm(range(2023, 2025), desc="Fetching pitstop data by year"):
+    for round_number in range(1, 23):  # Assumindo que o número máximo de rodadas é 22
+        url = f"http://ergast.com/api/f1/{year}/{round_number}/pitstops"
+        response = requests.get(url)
+        xml_data = response.text
+
+        pitstop_data = extract_pitstop_data(xml_data)
+        all_pitstop_data.extend(pitstop_data)
+
+# Criar o dataframe com todos os dados de pitstops
+pitstop_df = pd.DataFrame(all_pitstop_data)
+
+# Mostrar o dataframe de pitstops
+pitstop_df
+
+#engine = create_engine('sqlite:///F1_DATA.db')
+# Salvar o DataFrame de pitstops em uma tabela chamada "pitstops" no banco de dados SQLite
+#pitstop_df.to_sql('pitstops', con=engine, if_exists='replace', index=False)
+#print("Dados de pitstops salvos no banco de dados com sucesso.")
+
 
