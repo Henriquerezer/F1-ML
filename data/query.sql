@@ -1,7 +1,9 @@
-SELECT DISTINCT(Season), COUNT(DISTINCT(Round))
+SELECT  DISTINCT(Round) as Round, max(Season) as Season
 
 FROM results
 
-GROUP BY Season
+WHERE Season = 2024
 
-ORDER BY Season ASC
+GROUP BY Round
+
+ORDER BY Round desc, Season ASC;

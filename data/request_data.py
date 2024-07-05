@@ -53,14 +53,12 @@ while True:
 
 # Cria o DataFrame com todos os dados de pilotos
 df = pd.DataFrame(all_drivers)
-df = df.sort_values(by=['DateOfBirth'], ascending=False, ignore_index=True).reset_index()
+df = df.sort_values(by=['DateOfBirth'], ascending=False, ignore_index=True)
 
 # Cria a engine para o banco de dados SQLite
 engine = create_engine('sqlite:///../data/F1_DATA.db')
-
 # Salva o DataFrame em uma tabela chamada "drivers" no banco de dados SQLite
 df.to_sql('drivers', con=engine, if_exists='replace', index=False)
-
 print("Dados salvos no banco de dados com sucesso.")
 
 
@@ -113,6 +111,8 @@ for year in tqdm(range(start_year, end_year + 1), desc="Fetching Constructors Da
 
 # Cria o DataFrame com todos os dados de construtores
 df = pd.DataFrame(all_constructors)
+
+df['year'] = df['year'].astype(int)
 # Cria a engine para o banco de dados SQLite
 engine = create_engine('sqlite:///../data/F1_DATA.db')
 
@@ -295,7 +295,15 @@ for year in tqdm(years, desc="Fetching race data by year"):
 df = pd.DataFrame(all_race_data)
 
 # Mostrar o dataframe
-df
+df['Season'] =df['Season'].astype(int)
+df['Round']  =df['Round'] .astype(int)
+df['Position'] = df['Position'] .astype(int)
+df['Points'] = df['Points'] .astype(float)
+df['PermanentNumber'] =df['PermanentNumber'].astype(int)
+df['Grid'] =df['Grid'].astype(int)
+df['Laps'] =df['Laps'].astype(int)
+
+
 
 engine = create_engine('sqlite:///../data/F1_DATA.db')
 # Salva o DataFrame em uma tabela chamada "results" no banco de dados SQLite
@@ -406,6 +414,12 @@ df = pd.DataFrame(all_qualifying_data)
 # Mostrar o dataframe
 df
 
+df['Season'] =df['Season'].astype(int)
+df['Round']  =df['Round'] .astype(int)
+df['Position'] = df['Position'] .astype(int)
+df['PermanentNumber'] =df['PermanentNumber'].astype(int)
+
+
 engine = create_engine('sqlite:///../data/F1_DATA.db')
 # Salva o DataFrame em uma tabela chamada "qualifying_results" no banco de dados SQLite
 df.to_sql('qualifying_results', con=engine, if_exists='replace', index=False)
@@ -482,7 +496,11 @@ for year in tqdm(range(2000, 2025)):
 #all_standings.to_csv('driver_standings.csv', index=False)
 
 # Exibir os primeiros registros
-print(all_standings.head())
+all_standings['season'] = all_standings['season'].astype(int)
+all_standings['round'] = all_standings['round'].astype(int)
+all_standings['position'] = all_standings['position'].astype(int)
+all_standings['points'] = all_standings['points'].astype(float)
+all_standings['wins'] = all_standings['wins'].astype(int)
 
 engine = create_engine('sqlite:///../data/F1_DATA.db')
 # Salva o DataFrame em uma tabela chamada "qualifying_results" no banco de dados SQLite
@@ -554,6 +572,11 @@ for year in tqdm(range(2000, 2025)):
 
 # Exibir os primeiros registros
 all_standings
+all_standings['season'] = all_standings['season'].astype(int)
+all_standings['round'] = all_standings['round'].astype(int)
+all_standings['position'] = all_standings['position'].astype(int)
+all_standings['points'] = all_standings['points'].astype(float)
+all_standings['wins'] = all_standings['wins'].astype(int)
 
 engine = create_engine('sqlite:///../data/F1_DATA.db')
 # Salva o DataFrame em uma tabela chamada "qualifying_results" no banco de dados SQLite
@@ -627,6 +650,10 @@ for year in tqdm(range(2000, 2025)):
 
 # Exibir os primeiros registros
 all_pitstops
+all_pitstops['season'] = all_pitstops['season'].astype(int)
+all_pitstops['round'] = all_pitstops['round'].astype(int)
+all_pitstops['stop'] = all_pitstops['stop'].astype(int)
+all_pitstops['lap'] = all_pitstops['lap'].astype(int)
 
 engine = create_engine('sqlite:///../data/F1_DATA.db')
 # Salva o DataFrame em uma tabela chamada "qualifying_results" no banco de dados SQLite
