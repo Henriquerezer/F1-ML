@@ -35,3 +35,6 @@ Possíveis Features
     - posição de largada no grid
     - média de posições ganhas/perdidas na carreira ( diferença entre a posição de largada e de chegada) e por cada circuito
     - AverageSpeed, por circuito
+    - piloto venceu as última 1/2/3/4/5/6 corridas 
+    - piloto tem vitória nas últimas 5/10 corridas 
+    - piloto tem top 3/5 nas últimas 5/10 corridas
