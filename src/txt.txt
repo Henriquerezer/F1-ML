@@ -1,0 +1,47 @@
+WITH UltimaCorrida AS (
+    SELECT
+        season,
+        constructorId,
+        wins,
+        ROW_NUMBER() OVER (PARTITION BY season, constructorId ORDER BY round DESC) AS row_num
+    FROM
+        constructor_standings
+),
+TotalCorridas AS (
+    SELECT
+        season,
+        COUNT(DISTINCT round) AS total_corridas
+    FROM
+        constructor_standings
+    GROUP BY
+        season
+),
+TotalVitorias AS (
+    SELECT
+        season,
+        constructorId,
+        MAX(wins) AS total_vitorias
+    FROM
+        constructor_standings
+    GROUP BY
+        season,
+        constructorId
+)
+SELECT
+    uc.season,
+    uc.constructorId,
+    uc.wins AS total_de_vitorias_por_season,
+    (CAST(tv.total_vitorias AS FLOAT) / tc.total_corridas) AS media_vitorias,
+    c.Nationality as Constructor_Nationality
+FROM
+    UltimaCorrida uc
+JOIN
+    TotalVitorias tv ON uc.season = tv.season AND uc.constructorId = tv.constructorId
+JOIN
+    TotalCorridas tc ON uc.season = tc.season
+JOIN
+    constructors c ON uc.constructorId = c.constructorId
+WHERE
+    uc.row_num = 1
+GROUP BY
+    uc.season, uc.constructorId, uc.wins, tc.total_corridas, tv.total_vitorias, c.Nationality

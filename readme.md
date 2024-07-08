@@ -4,16 +4,17 @@ Possíveis Features
 *  Circuito
     - circuitId
     - country
-*  Construtor
+
+*  Construtor (v)
     - constructorId
     - Nationality
     - quantidade de vitórias por ano
     - média de vitórias por temporada
     - total de vitórias histórica
+    - quantidade de vitória por circuito !!
 
 *  Pilotos
     - driverId
-    - DateOfBirth ( IDADE DO PILOTO)
     - Nationality
     - Quantidade de vitórias por ano
     - média de vitórias por temporada
@@ -33,7 +34,7 @@ Possíveis Features
     - média de posição por cicuito
     - nacionalidade do contrutor é o mesmo do circuito ?
     - posição de largada no grid
-    - média de posições ganhas/perdidas na carreira ( diferença entre a posição de largada e de chegada) e por cada circuito
+    - média de posições ganhas/perdidas na carreira ( diferença entre a posição de largada (Grid) e de chegada (Position)) e por cada circuito
     - AverageSpeed, por circuito
     - piloto venceu as última 1/2/3/4/5/6 corridas 
     - piloto tem vitória nas últimas 5/10 corridas 
