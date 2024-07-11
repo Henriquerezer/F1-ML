@@ -34,8 +34,8 @@ Possíveis Features
     - média de posição por cicuito
     - nacionalidade do contrutor é o mesmo do circuito ?
     - posição de largada no grid
-    - média de posições ganhas/perdidas na carreira ( diferença entre a posição de largada (Grid) e de chegada (Position)) e por cada circuito
     - AverageSpeed, por circuito
+    - (diferença entre a posição de largada (Grid) e de chegada (Position)) e por cada circuito
     - piloto venceu as última 1/2/3/4/5/6 corridas 
     - piloto tem vitória nas últimas 5/10 corridas 
     - piloto tem top 3/5 nas últimas 5/10 corridas
