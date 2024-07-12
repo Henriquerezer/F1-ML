@@ -98,22 +98,8 @@ print(f"Best cross-validation score: {grid.best_score_}")
 # %%
 
 y_train_proba = model_pipeline.predict(X_train)
-#y_test_proba  = model_pipeline.predict_proba(X_test)
-
-print('acc', metrics.accuracy_score(y_train, y_train_proba))
-print('auc' ,metrics.roc_auc_score(y_train, y_train_proba))
-print('precision' , metrics.precision_score(y_train, y_train_proba))
-print('recall' ,metrics.recall_score(y_train, y_train_proba))
-
-# %%
-
-#y_train_proba = model_pipeline.predict(X_train)
 y_test_proba  = model_pipeline.predict(X_test)
-
-print('acc', metrics.accuracy_score(y_test, y_test_proba))
-print('auc' ,metrics.roc_auc_score(y_test, y_test_proba))
-print('precision' , metrics.precision_score(y_test, y_test_proba))
-print('recall' ,metrics.recall_score(y_test, y_test_proba))
+y_oot_proba   = model_pipeline.predict(df_test_final[features])
 
 # %%
 
@@ -137,6 +123,8 @@ report_train = report_metrics(y_train, y_train_proba)
 report_train['base'] = 'Train'
 report_test = report_metrics(y_test, y_test_proba)
 report_test['base'] = 'Test'
+report_oot = report_metrics(df_test_final[target], y_oot_proba)
+report_oot['base'] = 'Oot'
 
-df_metrics = pd.DataFrame([report_train,report_test])
+df_metrics = pd.DataFrame([report_train,report_test,report_oot])
 df_metrics

@@ -48,9 +48,10 @@ Best cross-validation score: 0.9323052621653655
 
 
     
-Acurácia	Curva Roc	Precisão	Recall	base
-0	0.999140	0.990881	1.0	0.981763	Train
-1	0.995413	0.951220	1.0	0.902439	Test
+	Acurácia	Curva Roc	Precisão	Recall	    base
+0	0.999140	0.990881	1.0	        0.981763	Train
+1	0.995413	0.951220	1.0	        0.902439	Test
+2	0.998213	0.982143	1.0	        0.964286	Oot
 
 
  - ANALISAR OVERFITTING!!
