@@ -39,3 +39,18 @@ Possíveis Features
     - piloto venceu as última 1/2/3/4/5/6 corridas 
     - piloto tem vitória nas últimas 5/10 corridas 
     - piloto tem top 3/5 nas últimas 5/10 corridas
+
+
+OneHotEncoder(drop='first', handle_unknown='ignore')
+Fitting 3 folds for each of 1920 candidates, totalling 5760 fits
+Best parameters: {'criterion': 'entropy', 'max_depth': 25, 'max_features': 'sqrt', 'max_leaf_nodes': 95, 'min_samples_leaf': 3, 'n_estimators': 500}
+Best cross-validation score: 0.9323052621653655
+
+
+    
+Acurácia	Curva Roc	Precisão	Recall	base
+0	0.999140	0.990881	1.0	0.981763	Train
+1	0.995413	0.951220	1.0	0.902439	Test
+
+
+ - ANALISAR OVERFITTING!!
