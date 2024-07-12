@@ -9,7 +9,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn import model_selection
 from sklearn import metrics
-
+import datetime
 # %%
 engine = sqlalchemy.create_engine("sqlite:///../../data/FEATURES.db")
 # Importando a query do sql
@@ -128,3 +128,14 @@ report_oot['base'] = 'Oot'
 
 df_metrics = pd.DataFrame([report_train,report_test,report_oot])
 df_metrics
+
+# %%
+
+model_series = pd.Series({
+    'model':model_pipeline,
+    'features':features,
+    'metrics':df_metrics,
+    'dt_train':datetime.datetime.now()
+})
+
+model_series.to_pickle('../../models/first_RF.pkl')
