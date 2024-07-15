@@ -13,20 +13,32 @@ import datetime
 # %%
 engine = sqlalchemy.create_engine("sqlite:///../../data/FEATURES.db")
 # Importando a query do sql
-with open('abt.sql', 'r') as open_file:
+with open('abt2.sql', 'r') as open_file:
     query = open_file.read()
 
 #Processando e trazendo os dados, para um dataframe
 df = pd.read_sql(query, engine)
-df = df.drop(['Position', 'Points', 'Position'], axis = 1)
-df['AverageSpeed'] = df['AverageSpeed'].astype(float)
-df
+#df = df.drop(['Position', 'Points', 'Position'], axis = 1)
+def convert_time_to_seconds(time_str):
+    if isinstance(time_str, str) and ':' in time_str:
+        minutes, seconds = time_str.split(':')
+        return float(minutes) * 60 + float(seconds)
+    return float(0)  # Retorna NaN para entradas inválidas
 
+# Aplica a conversão nas colunas Q1, Q2, Q3
+df[['Q1', 'Q2', 'Q3']] = df[['Q1', 'Q2', 'Q3']].applymap(convert_time_to_seconds)
+df
+columns_to_fill = ['Code', 'avg_Q1_time', 'avg_Q2_time', 'avg_Q3_time', 
+                    'driver_avg_position', 'driver_total_races']
+
+df[columns_to_fill] = df[columns_to_fill].fillna(0)
+df['Code'] = df['Code'].astype(str)
+df
 # %%
 df_train = df[df['Season'] < 2022]
 df_test_final = df[df['Season'] >= 2022]
 
-target = 'win'
+target = 'Position'
 features = df_train.columns[2:-1].to_list()
 #%% 
 X_train, X_test, y_train, y_test = model_selection.train_test_split(df_train[features],
@@ -79,7 +91,7 @@ params = {
 
 
 # Configuração do GridSearchCV
-grid = GridSearchCV(model, param_grid=params, cv=3, scoring='f1', n_jobs=-1, verbose=5)
+grid = GridSearchCV(model, param_grid=params, cv=3, scoring='accuracy', n_jobs=-1, verbose=5)
 
 # Criação do pipeline que inclui o pré-processamento e o modelo
 model_pipeline = pipeline.Pipeline(steps=[
@@ -103,21 +115,28 @@ y_oot_proba   = model_pipeline.predict(df_test_final[features])
 
 # %%
 
+from sklearn import metrics
+import numpy as np
+
 def report_metrics(y_true, y_proba):
-    y_pred = (y_proba).astype(int)
+    if y_proba.ndim == 1:
+        y_proba = np.vstack([1 - y_proba, y_proba]).T  # Para problemas binários
+    
+    y_pred = y_proba.argmax(axis=1)  # Para múltiplas classes
 
     acc = metrics.accuracy_score(y_true, y_pred)
-    auc = metrics.roc_auc_score(y_true, y_proba)
-    precision = metrics.precision_score(y_true, y_pred)
-    recall = metrics.recall_score(y_true, y_pred)
+    auc = metrics.roc_auc_score(y_true, y_proba, multi_class='ovr')
+    precision = metrics.precision_score(y_true, y_pred, average='weighted')
+    recall = metrics.recall_score(y_true, y_pred, average='weighted')
 
     res = {
-        "Acurácia" : acc,
-        "Curva Roc" : auc,
-        "Precisão" : precision,
-        "Recall" : recall,
+        "Acurácia": acc,
+        "Curva Roc": auc,
+        "Precisão": precision,
+        "Recall": recall,
     }
     return res
+
 
 report_train = report_metrics(y_train, y_train_proba)
 report_train['base'] = 'Train'
@@ -139,3 +158,7 @@ model_series = pd.Series({
 })
 
 model_series.to_pickle('../../models/first_RF.pkl')
+
+# %% 
+
+y_train_proba.shape
