@@ -18,10 +18,9 @@ with open('abt.sql', 'r') as open_file:
 
 #Processando e trazendo os dados, para um dataframe
 df = pd.read_sql(query, engine)
-df = df.drop(['Position', 'Points', 'Position'], axis = 1)
+df = df.drop(['Position', 'Points', 'Position','DifferenceGridPosition'], axis = 1)
 df['AverageSpeed'] = df['AverageSpeed'].astype(float)
 df
-
 # %%
 df_train = df[df['Season'] < 2022]
 df_test_final = df[df['Season'] >= 2022]
@@ -128,9 +127,75 @@ report_oot['base'] = 'Oot'
 
 df_metrics = pd.DataFrame([report_train,report_test,report_oot])
 df_metrics
+# %%
+# TESTANDO COM APENAS 1 CORRIDA 
+
+df_test_final1 = df_test_final[(df_test_final['Season'] == 2024) & (df_test_final['Round'] == 10)]
+
+import matplotlib.pyplot as plt
+from sklearn import metrics
+import numpy as np
+
+# Função para relatar métricas e plotar gráficos
+def report_metrics(y_true, y_proba):
+    y_pred = (y_proba).astype(int)
+
+    acc = metrics.accuracy_score(y_true, y_pred)
+    auc = metrics.roc_auc_score(y_true, y_proba)
+    precision = metrics.precision_score(y_true, y_pred)
+    recall = metrics.recall_score(y_true, y_pred)
+    
+    # Matriz de confusão
+    confusion_matrix = metrics.confusion_matrix(y_true, y_pred)
+    
+    res = {
+        "Acurácia" : acc,
+        "Curva Roc" : auc,
+        "Precisão" : precision,
+        "Recall" : recall,
+    }
+
+    # Plotagem da curva ROC
+    fpr, tpr, _ = metrics.roc_curve(y_true, y_proba)
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.plot(fpr, tpr, color='blue', lw=2, label=f'AUC = {auc:.2f}')
+    plt.plot([0, 1], [0, 1], color='gray', lw=2, linestyle='--')
+    plt.xlabel('Taxa de Falsos Positivos')
+    plt.ylabel('Taxa de Verdadeiros Positivos')
+    plt.title('Curva ROC')
+    plt.legend(loc='lower right')
+    
+    # Plotagem da matriz de confusão
+    plt.subplot(1, 2, 2)
+    metrics.ConfusionMatrixDisplay(confusion_matrix).plot(cmap=plt.cm.Blues, ax=plt.gca())
+    plt.title('Matriz de Confusão')
+    plt.grid(False)
+    plt.show()
+
+    return res
+
+# Previsões
+y_train_proba = model_pipeline.predict(X_train)
+y_test_proba  = model_pipeline.predict(X_test)
+y_oot_proba   = model_pipeline.predict(df_test_final1[features])
+
+# Relatar métricas e plotar gráficos para o conjunto de treinamento
+train_metrics = report_metrics(y_train, y_train_proba)
+print("Métricas de Treinamento:", train_metrics)
+
+# Relatar métricas e plotar gráficos para o conjunto de teste
+test_metrics = report_metrics(y_test, y_test_proba)
+print("Métricas de Teste:", test_metrics)
+
+# Relatar métricas e plotar gráficos para o conjunto OOT (Out-of-Time)
+oot_metrics = report_metrics(df_test_final1[target], y_oot_proba)
+print("Métricas OOT:", oot_metrics)
+
+
 
 # %%
-
+# SALVANDO MODELO
 model_series = pd.Series({
     'model':model_pipeline,
     'features':features,
@@ -139,3 +204,4 @@ model_series = pd.Series({
 })
 
 model_series.to_pickle('../../models/first_RF.pkl')
+
