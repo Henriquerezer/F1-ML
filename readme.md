@@ -42,16 +42,15 @@ Possíveis Features
 
 
 OneHotEncoder(drop='first', handle_unknown='ignore')
-Fitting 3 folds for each of 1920 candidates, totalling 5760 fits
-Best parameters: {'criterion': 'entropy', 'max_depth': 25, 'max_features': 'sqrt', 'max_leaf_nodes': 95, 'min_samples_leaf': 3, 'n_estimators': 500}
-Best cross-validation score: 0.9323052621653655
+Fitting 3 folds for each of 3360 candidates, totalling 10080 fits
+Best parameters: {'criterion': 'entropy', 'max_depth': 20, 'max_features': 'sqrt', 'max_leaf_nodes': 105, 'min_samples_leaf': 1, 'n_estimators': 50}
+Best cross-validation score: 0.4377964354102224
 
 
     
 	Acurácia	Curva Roc	Precisão	Recall	    base
-0	0.999140	0.990881	1.0	        0.981763	Train
-1	0.995413	0.951220	1.0	        0.902439	Test
-2	0.998213	0.982143	1.0	        0.964286	Oot
+0	0.973050	0.722953	0.960784	0.446809	Train
+1	0.962729	0.615252	0.904762	0.231707	Test
+2	0.965759	0.657895	1.000000	0.315789	Oot
 
 
- - ANALISAR OVERFITTING!!

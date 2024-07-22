@@ -18,7 +18,7 @@ with open('abt.sql', 'r') as open_file:
 
 #Processando e trazendo os dados, para um dataframe
 df = pd.read_sql(query, engine)
-df = df.drop(['Position', 'Points', 'Position','DifferenceGridPosition'], axis = 1)
+df = df.drop(['Position', 'Points'], axis = 1)
 df['AverageSpeed'] = df['AverageSpeed'].astype(float)
 df
 # %%
@@ -68,17 +68,17 @@ model = RandomForestClassifier(random_state=42)
 
 # Definição dos hiperparâmetros para o GridSearchCV
 params = {
-    'min_samples_leaf': [3, 5, 10, 25],
-    'n_estimators': [100, 150 ,200, 500],
+    'min_samples_leaf': [1,2,3, 5,],
+    'n_estimators': [50,100, 150 ,200, 500, 600, 700],
     'criterion': ["gini", 'entropy'],
-    'max_depth': [18, 20, 25, 30, 35, 40 ],
+    'max_depth': [18, 20, 22, 25, 30,],
     'max_features' : ['sqrt', 'log2'],
-    'max_leaf_nodes':[50, 55, 75, 85, 95]
+    'max_leaf_nodes':[75, 80, 85, 95, 100, 105]
 }
 
 
 # Configuração do GridSearchCV
-grid = GridSearchCV(model, param_grid=params, cv=3, scoring='f1', n_jobs=-1, verbose=5)
+grid = GridSearchCV(model, param_grid=params, cv=3, scoring='f1', n_jobs=-1, verbose=10)
 
 # Criação do pipeline que inclui o pré-processamento e o modelo
 model_pipeline = pipeline.Pipeline(steps=[
@@ -127,10 +127,24 @@ report_oot['base'] = 'Oot'
 
 df_metrics = pd.DataFrame([report_train,report_test,report_oot])
 df_metrics
+
 # %%
+
+# SALVANDO MODELO
+model_series = pd.Series({
+    'model':model_pipeline,
+    'features':features,
+    'metrics':df_metrics,
+    'dt_train':datetime.datetime.now()
+})
+
+model_series.to_pickle('../../models/first_RF.pkl')
+
+# %%
+
 # TESTANDO COM APENAS 1 CORRIDA 
 
-df_test_final1 = df_test_final[(df_test_final['Season'] == 2024) & (df_test_final['Round'] == 10)]
+df_test_final1 = df_test_final[(df_test_final['Season'] == 2024) & (df_test_final['Round'] == 12)]
 
 import matplotlib.pyplot as plt
 from sklearn import metrics
@@ -191,17 +205,3 @@ print("Métricas de Teste:", test_metrics)
 # Relatar métricas e plotar gráficos para o conjunto OOT (Out-of-Time)
 oot_metrics = report_metrics(df_test_final1[target], y_oot_proba)
 print("Métricas OOT:", oot_metrics)
-
-
-
-# %%
-# SALVANDO MODELO
-model_series = pd.Series({
-    'model':model_pipeline,
-    'features':features,
-    'metrics':df_metrics,
-    'dt_train':datetime.datetime.now()
-})
-
-model_series.to_pickle('../../models/first_RF.pkl')
-
