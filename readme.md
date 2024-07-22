@@ -47,10 +47,10 @@ Best parameters: {'criterion': 'entropy', 'max_depth': 20, 'max_features': 'sqrt
 Best cross-validation score: 0.4377964354102224
 
 
-    
-	Acurácia	Curva Roc	Precisão	Recall	    base
+```    
+	Acurácia	Curva Roc	Precisão	Recall	    	base
 0	0.973050	0.722953	0.960784	0.446809	Train
 1	0.962729	0.615252	0.904762	0.231707	Test
 2	0.965759	0.657895	1.000000	0.315789	Oot
 
-
+```
