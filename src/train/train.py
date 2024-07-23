@@ -93,8 +93,8 @@ model_pipeline.fit(X_train, y_train)
 print(f"Best parameters: {grid.best_params_}")
 print(f"Best cross-validation score: {grid.best_score_}")
 
-
 # %%
+
 
 y_train_proba = model_pipeline.predict(X_train)
 y_test_proba  = model_pipeline.predict(X_test)

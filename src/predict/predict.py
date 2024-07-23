@@ -1,4 +1,7 @@
 # %% 
+import matplotlib.pyplot as plt
+from sklearn import metrics
+import numpy as np
 import pandas as pd
 import sqlalchemy
 from sqlalchemy import exc
@@ -13,63 +16,61 @@ model_series
 
 #Processando e trazendo os dados, para um dataframe
 df = pd.read_sql(query, engine)
-df = df.drop(['Position', 'Points', 'Position','DifferenceGridPosition'], axis = 1)
+df = df.drop(['Position', 'Points'], axis = 1)
 df['AverageSpeed'] = df['AverageSpeed'].astype(float)
 df
 
 
+
 # %%
+# TESTANDO COM MAIS DE 1 CORRIDA 
+df_test_final1 = df[(df['Season'] == 2024) & (df['Round'] >= 13)]
 
-# TESTANDO COM APENAS 1 CORRIDA 
-target = 'win'
-df_test_final1 = df[(df['Season'] == 2024) & (df['Round'] == 10)]
+# DataFrame para armazenar os resultados finais
+results = []
 
-import matplotlib.pyplot as plt
-from sklearn import metrics
-import numpy as np
+# Obter os rounds únicos a partir do df_test_final1
+unique_rounds = df_test_final1['Round'].unique()
 
-# Função para relatar métricas e plotar gráficos
-def report_metrics(y_true, y_proba):
-    y_pred = (y_proba).astype(int)
-
-    acc = metrics.accuracy_score(y_true, y_pred)
-    auc = metrics.roc_auc_score(y_true, y_proba)
-    precision = metrics.precision_score(y_true, y_pred)
-    recall = metrics.recall_score(y_true, y_pred)
+# Iterar sobre cada round
+for round_number in unique_rounds:
+    # Filtrar os dados para o round atual
+    df_round = df_test_final1[df_test_final1['Round'] == round_number].copy()
     
-    # Matriz de confusão
-    confusion_matrix = metrics.confusion_matrix(y_true, y_pred)
+    # Prever as probabilidades para o round atual
+    y_oot_proba = model_series['model'].predict_proba(df_round[model_series['features']])
     
-    res = {
-        "Acurácia" : acc,
-        "Curva Roc" : auc,
-        "Precisão" : precision,
-        "Recall" : recall,
-    }
-
-    # Plotagem da curva ROC
-    fpr, tpr, _ = metrics.roc_curve(y_true, y_proba)
-    plt.figure(figsize=(10, 5))
-    plt.subplot(1, 2, 1)
-    plt.plot(fpr, tpr, color='blue', lw=2, label=f'AUC = {auc:.2f}')
-    plt.plot([0, 1], [0, 1], color='gray', lw=2, linestyle='--')
-    plt.xlabel('Taxa de Falsos Positivos')
-    plt.ylabel('Taxa de Verdadeiros Positivos')
-    plt.title('Curva ROC')
-    plt.legend(loc='lower right')
+    # Selecionar a coluna que representa a probabilidade da classe 1 (vencedor)
+    prob_victory = y_oot_proba[:, 1]
     
-    # Plotagem da matriz de confusão
-    plt.subplot(1, 2, 2)
-    metrics.ConfusionMatrixDisplay(confusion_matrix).plot(cmap=plt.cm.Blues, ax=plt.gca())
-    plt.title('Matriz de Confusão')
-    plt.grid(False)
-    plt.show()
+    # Imprimir as probabilidades de vitória de cada piloto
+    print(f"Round {round_number} - Probabilidades de vitória:")
+    for i, prob in enumerate(prob_victory):
+        print(f"Piloto {i}: Probabilidade de vitória = {prob:.4f}")
+    
+    # Criar um array de zeros com o mesmo tamanho que prob_victory
+    predicted_winner = np.zeros_like(prob_victory, dtype=int)
+    
+    # Encontrar o índice do piloto com a maior probabilidade de vitória
+    winner_index = np.argmax(prob_victory)
+    
+    # Definir esse índice como 1 (vencedor)
+    predicted_winner[winner_index] = 1
+    
+    # Adicionar a coluna de probabilidade e a predição ao DataFrame do round atual usando .loc
+    df_round.loc[:, 'prob_victory'] = prob_victory
+    df_round.loc[:, 'predicted_winner'] = predicted_winner
+    
+    # Adicionar os resultados do round atual à lista de resultados
+    results.append(df_round)
 
-    return res
+# Concatenar todos os resultados em um único DataFrame
+df_final_results = pd.concat(results)
 
-# Previsões
-y_oot_proba   = model_series['model'].predict(df_test_final1[model_series['features']])
+# Exibir os resultados finais
+print("\nResultados Finais:")
 
-# Relatar métricas e plotar gráficos para o conjunto OOT (Out-of-Time)
-oot_metrics = report_metrics(df_test_final1[target], y_oot_proba)
-print("Métricas OOT:", oot_metrics)
+# %%
+# DATAFRAME FINAL
+df_final_results[['Season','Round','CircuitID','country','DriverID','predicted_winner']]
+
