@@ -1,0 +1,1 @@
+{'min_samples_leaf': [1, 2], 'n_estimators': [25, 50, 100], 'criterion': ['gini', 'entropy'], 'max_depth': [18, 20], 'max_features': ['sqrt', 'log2'], 'max_leaf_nodes': [100, 105, 110]}

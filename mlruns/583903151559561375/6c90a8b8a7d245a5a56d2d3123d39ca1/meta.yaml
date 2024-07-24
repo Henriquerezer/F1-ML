@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/583903151559561375/6c90a8b8a7d245a5a56d2d3123d39ca1/artifacts
+end_time: 1721762341664
+entry_point_name: ''
+experiment_id: '583903151559561375'
+lifecycle_stage: active
+run_id: 6c90a8b8a7d245a5a56d2d3123d39ca1
+run_name: treasured-mare-220
+run_uuid: 6c90a8b8a7d245a5a56d2d3123d39ca1
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1721761906336
+status: 3
+tags: []
+user_id: hreze

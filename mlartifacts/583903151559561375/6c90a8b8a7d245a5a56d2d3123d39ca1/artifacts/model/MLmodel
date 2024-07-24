@@ -1,0 +1,41 @@
+artifact_path: model
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.11.9
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.5.1
+mlflow_version: 2.14.3
+model_size_bytes: 1826155
+model_uuid: 4607d118d0544b7882586c9b24c192a0
+run_id: 6c90a8b8a7d245a5a56d2d3123d39ca1
+signature:
+  inputs: '[{"type": "string", "name": "CircuitID", "required": true}, {"type": "string",
+    "name": "country", "required": true}, {"type": "string", "name": "ConstructorName",
+    "required": true}, {"type": "string", "name": "constructorId", "required": true},
+    {"type": "string", "name": "ConstructorNationality", "required": true}, {"type":
+    "string", "name": "DriverID", "required": true}, {"type": "string", "name": "DriverName",
+    "required": true}, {"type": "string", "name": "DriverNationality", "required":
+    true}, {"type": "string", "name": "Nationality", "required": true}, {"type": "long",
+    "name": "Grid", "required": true}, {"type": "string", "name": "Status", "required":
+    true}, {"type": "double", "name": "AverageSpeed", "required": true}, {"type":
+    "long", "name": "DifferenceGridPosition", "required": true}, {"type": "long",
+    "name": "WonLastRace", "required": true}, {"type": "long", "name": "WonLast2Races",
+    "required": true}, {"type": "long", "name": "WonLast3Races", "required": true},
+    {"type": "long", "name": "WonLast4Races", "required": true}, {"type": "long",
+    "name": "WonLast5Races", "required": true}, {"type": "long", "name": "WonLast6Races",
+    "required": true}, {"type": "long", "name": "WonLast7Races", "required": true},
+    {"type": "long", "name": "WonLast10Races", "required": true}, {"type": "long",
+    "name": "Top3Last5Races", "required": true}, {"type": "long", "name": "Top5Last10Races",
+    "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+utc_time_created: '2024-07-23 19:18:57.195734'

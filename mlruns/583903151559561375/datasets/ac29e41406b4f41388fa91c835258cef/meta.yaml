@@ -1,0 +1,23 @@
+digest: 183d095e
+name: dataset
+profile: '{"num_rows": 6976, "num_elements": 160448}'
+schema: '{"mlflow_colspec": [{"type": "string", "name": "CircuitID", "required": true},
+  {"type": "string", "name": "country", "required": true}, {"type": "string", "name":
+  "ConstructorName", "required": true}, {"type": "string", "name": "constructorId",
+  "required": true}, {"type": "string", "name": "ConstructorNationality", "required":
+  true}, {"type": "string", "name": "DriverID", "required": true}, {"type": "string",
+  "name": "DriverName", "required": true}, {"type": "string", "name": "DriverNationality",
+  "required": true}, {"type": "string", "name": "Nationality", "required": true},
+  {"type": "long", "name": "Grid", "required": true}, {"type": "string", "name": "Status",
+  "required": true}, {"type": "double", "name": "AverageSpeed", "required": true},
+  {"type": "long", "name": "DifferenceGridPosition", "required": true}, {"type": "long",
+  "name": "WonLastRace", "required": true}, {"type": "long", "name": "WonLast2Races",
+  "required": true}, {"type": "long", "name": "WonLast3Races", "required": true},
+  {"type": "long", "name": "WonLast4Races", "required": true}, {"type": "long", "name":
+  "WonLast5Races", "required": true}, {"type": "long", "name": "WonLast6Races", "required":
+  true}, {"type": "long", "name": "WonLast7Races", "required": true}, {"type": "long",
+  "name": "WonLast10Races", "required": true}, {"type": "long", "name": "Top3Last5Races",
+  "required": true}, {"type": "long", "name": "Top5Last10Races", "required": true}]}'
+source: '{"tags": {"mlflow.user": "hreze", "mlflow.source.name": "d:\\F1-ML\\.venv\\Lib\\site-packages\\ipykernel_launcher.py",
+  "mlflow.source.type": "LOCAL"}}'
+source_type: code
