@@ -68,12 +68,12 @@ model = RandomForestClassifier(random_state=42)
 
 # Definição dos hiperparâmetros para o GridSearchCV
 params = {
-    'min_samples_leaf': [1,2,3, 5,],
-    'n_estimators': [50,100, 150 ,200, 500, 600, 700],
+    'min_samples_leaf': [1,2,3],
+    'n_estimators': [30,40,50,100, 150 ,200],
     'criterion': ["gini", 'entropy'],
     'max_depth': [18, 20, 22, 25, 30,],
     'max_features' : ['sqrt', 'log2'],
-    'max_leaf_nodes':[75, 80, 85, 95, 100, 105]
+    'max_leaf_nodes':[95, 100, 105,110,115,120]
 }
 
 
