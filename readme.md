@@ -146,3 +146,7 @@ O MLflow foi utilizado para acompanhar o modelo. Inicialmente, apenas o modelo d
     - piloto tem vitória nas últimas 5/10 corridas 
     - piloto tem top 3/5 nas últimas 5/10 corridas
 
+
+Notas:
+ - Atualmente estou usando o status na corrida, mas poderia usar bolenas para o status na últimas corridas ... 
+ - O ideal depois, seria trocar a API, para ter mais infos, como condição do tempo, lat e long do circuito,  talvez até infos em tempo real
