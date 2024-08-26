@@ -24,7 +24,7 @@ df
 
 # %%
 # TESTANDO COM MAIS DE 1 CORRIDA 
-df_test_final1 = df[(df['Season'] == 2024) & (df['Round'] >= 12)]
+df_test_final1 = df[(df['Season'] == 2024) & (df['Round'] >= 15)]
 
 # DataFrame para armazenar os resultados finais
 results = []
@@ -72,5 +72,7 @@ print("\nResultados Finais:")
 
 # %%
 # DATAFRAME FINAL
-df_final_results[['Season','Round','CircuitID','country','DriverID','predicted_winner']]
+df_final_results[['Season','Round','CircuitID','country','DriverID','predicted_winner','prob_victory']]
 
+
+# %%
