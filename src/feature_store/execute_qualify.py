@@ -38,3 +38,5 @@ def ingest_date(query):
             print(f"Erro ao criar ou inserir dados na tabela: {e}")
 
 ingest_date(query)
+
+# %%

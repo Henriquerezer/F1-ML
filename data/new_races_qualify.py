@@ -145,3 +145,5 @@ if new_qualifying:
     save_new_qualifying_data(df, engine)
 else:
     logger.info("Não há novos dados de qualificação para serem adicionados.")
+
+# %%

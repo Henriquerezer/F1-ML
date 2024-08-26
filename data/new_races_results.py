@@ -161,3 +161,5 @@ if new_races:
 else:
     logger.info("Não há novas corridas para serem adicionadas.")
 
+
+# %%

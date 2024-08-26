@@ -39,3 +39,5 @@ def ingest_date(query):
 
 ingest_date(query)
 
+
+# %%

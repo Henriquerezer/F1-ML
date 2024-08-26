@@ -113,3 +113,5 @@ if new_pitstops:
     save_new_pitstop_data(df, engine)
 else:
     logger.info("Não há novos dados de pitstop para serem adicionados.")
+
+# %%
