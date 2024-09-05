@@ -163,3 +163,31 @@ else:
 
 
 # %%
+from urllib.request import urlopen
+import json
+
+response = urlopen('https://api.openf1.org/v1/weather?meeting_key=1244')
+data = json.loads(response.read().decode('utf-8'))
+print(data)
+
+# If you want, you can import the results in a DataFrame (you need to install the `pandas` package first)
+import pandas as pd
+df = pd.DataFrame(data)
+df
+
+# %%
+
+from urllib.request import urlopen
+import json
+
+response = urlopen('https://api.openf1.org/v1/sessions?country_name=Italy&year=2024')
+data = json.loads(response.read().decode('utf-8'))
+print(data)
+
+# If you want, you can import the results in a DataFrame (you need to install the `pandas` package first)
+import pandas as pd
+df = pd.DataFrame(data)
+df
+# %%
+
+9590
