@@ -24,7 +24,7 @@ df
 
 # %%
 # TESTANDO COM MAIS DE 1 CORRIDA 
-df_test_final1 = df[(df['Season'] == 2024) & (df['Round'] >= 15)]
+df_test_final1 = df[(df['Season'] == 2024) & (df['Round'] >= 16)]
 
 # DataFrame para armazenar os resultados finais
 results = []
