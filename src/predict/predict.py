@@ -75,4 +75,4 @@ print("\nResultados Finais:")
 df_final_results[['Season','Round','CircuitID','country','DriverID','predicted_winner','prob_victory']]
 
 
-# %%
+
